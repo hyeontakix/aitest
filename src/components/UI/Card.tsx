@@ -7,15 +7,28 @@ import './Card.css';
 interface Props {
     card: CardType;
     onClick?: (card: CardType) => void;
+    onReserve?: (card: CardType) => void;
     disabled?: boolean;
     canBuy?: boolean;
 }
 
-const Card: React.FC<Props> = ({ card, onClick, disabled, canBuy }) => {
+const Card: React.FC<Props> = ({ card, onClick, onReserve, disabled, canBuy }) => {
+    const handleClick = (e: React.MouseEvent) => {
+        if (disabled) return;
+
+        if (e.shiftKey && onReserve) {
+            e.preventDefault();
+            onReserve(card);
+        } else {
+            onClick?.(card);
+        }
+    };
+
     return (
         <div
             className={`game-card level-${card.level} ${canBuy ? 'can-buy' : ''} ${disabled ? 'disabled' : ''}`}
-            onClick={() => !disabled && onClick?.(card)}
+            onClick={handleClick}
+            title={!disabled ? "Click to Buy, Shift+Click to Reserve" : ""}
         >
             <div className="card-header">
                 <div className="card-points">{card.points > 0 ? card.points : ''}</div>

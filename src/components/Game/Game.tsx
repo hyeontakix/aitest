@@ -12,6 +12,7 @@ import './Game.css';
 const Game: React.FC = () => {
     const [gameState, dispatch] = useReducer(gameReducer, undefined, initializeGame);
     const [selectedTokens, setSelectedTokens] = useState<Resources>({ white: 0, blue: 0, green: 0, red: 0, black: 0, gold: 0 });
+    const [lastAction, setLastAction] = useState<string | null>(null);
 
     const humanPlayer = gameState.players[0];
     const aiPlayer = gameState.players[1];
@@ -45,6 +46,17 @@ const Game: React.FC = () => {
             };
         }
     }, [gameState.currentPlayerIndex, gameState.winner, gameState.turnPhase]);
+
+    // Toast Logic: Watch logs
+    useEffect(() => {
+        if (gameState.logs.length > 0) {
+            const lastLog = gameState.logs[gameState.logs.length - 1];
+            // Only show toast for meaningful actions (skip "Game started" if desired, or show all)
+            setLastAction(lastLog);
+            const timer = setTimeout(() => setLastAction(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [gameState.logs]);
 
     // Token Selection Logic
     const handleTakeToken = (color: GemColor) => {
@@ -108,18 +120,19 @@ const Game: React.FC = () => {
         }
     };
 
-    /* const handleReserveCard = (card: CardType) => {
-       // Only if creating "Reserve mode" or right click?
-       // For MVP, let's say Shift+Click reserves, or simple Button on detail.
-       // Let's rely on a separate specific UI action or maybe just a prompt.
-       if (!isHumanTurn || gameState.winner) return;
-       // Check validity
-       if (humanPlayer.reservedCards.length >= 3) return;
-       dispatch({ type: 'RESERVE_CARD', cardId: card.id });
-    }; */
+    const handleReserveCard = (card: CardType) => {
+        if (!isHumanTurn || gameState.winner) return;
+        // Check validity
+        if (humanPlayer.reservedCards.length >= 3) {
+            alert("You cannot reserve more than 3 cards!");
+            return;
+        }
+        dispatch({ type: 'RESERVE_CARD', cardId: card.id });
+    };
 
     return (
         <div className="game-container">
+            {lastAction && <div className="action-toast">{lastAction}</div>}
             {gameState.winner !== null && (
                 <div className="victory-overlay">
                     <div className="victory-modal">
@@ -157,7 +170,13 @@ const Game: React.FC = () => {
                     <div className="card-row">
                         <div className="deck-placeholder level-3-deck">Level 3 ({gameState.decks.level3.length})</div>
                         {gameState.cards.level3.map(card => (
-                            <Card key={card.id} card={card} onClick={(c) => handleBuyCard(c)} canBuy={isHumanTurn && canBuyCard(humanPlayer, card)} />
+                            <Card
+                                key={card.id}
+                                card={card}
+                                onClick={(c) => handleBuyCard(c)}
+                                onReserve={(c) => handleReserveCard(c)}
+                                canBuy={isHumanTurn && canBuyCard(humanPlayer, card)}
+                            />
                         ))}
                     </div>
 
@@ -165,7 +184,13 @@ const Game: React.FC = () => {
                     <div className="card-row">
                         <div className="deck-placeholder level-2-deck">Level 2 ({gameState.decks.level2.length})</div>
                         {gameState.cards.level2.map(card => (
-                            <Card key={card.id} card={card} onClick={(c) => handleBuyCard(c)} canBuy={isHumanTurn && canBuyCard(humanPlayer, card)} />
+                            <Card
+                                key={card.id}
+                                card={card}
+                                onClick={(c) => handleBuyCard(c)}
+                                onReserve={(c) => handleReserveCard(c)}
+                                canBuy={isHumanTurn && canBuyCard(humanPlayer, card)}
+                            />
                         ))}
                     </div>
 
@@ -173,7 +198,13 @@ const Game: React.FC = () => {
                     <div className="card-row">
                         <div className="deck-placeholder level-1-deck">Level 1 ({gameState.decks.level1.length})</div>
                         {gameState.cards.level1.map(card => (
-                            <Card key={card.id} card={card} onClick={(c) => handleBuyCard(c)} canBuy={isHumanTurn && canBuyCard(humanPlayer, card)} />
+                            <Card
+                                key={card.id}
+                                card={card}
+                                onClick={(c) => handleBuyCard(c)}
+                                onReserve={(c) => handleReserveCard(c)}
+                                canBuy={isHumanTurn && canBuyCard(humanPlayer, card)}
+                            />
                         ))}
                     </div>
                 </div>
