@@ -27,8 +27,7 @@ const Card: React.FC<Props> = ({ card, onClick, onReserve, disabled, canBuy }) =
     return (
         <div
             className={`game-card level-${card.level} ${canBuy ? 'can-buy' : ''} ${disabled ? 'disabled' : ''}`}
-            onClick={handleClick}
-            title={!disabled ? "Click to Buy, Shift+Click to Reserve" : ""}
+            onClick={handleClick} // Keep fallback for now, or could remove if buttons suffice (User might still expect click to buy)
         >
             <div className="card-header">
                 <div className="card-points">{card.points > 0 ? card.points : ''}</div>
@@ -52,6 +51,34 @@ const Card: React.FC<Props> = ({ card, onClick, onReserve, disabled, canBuy }) =
                     );
                 })}
             </div>
+
+            {/* Action Overlay */}
+            {!disabled && (
+                <div className="card-actions-overlay">
+                    {canBuy && (
+                        <button
+                            className="card-action-btn buy-btn"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onClick?.(card);
+                            }}
+                        >
+                            Buy
+                        </button>
+                    )}
+                    {onReserve && (
+                        <button
+                            className="card-action-btn reserve-btn"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onReserve(card);
+                            }}
+                        >
+                            Reserve
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

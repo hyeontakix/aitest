@@ -1,10 +1,9 @@
-
 .game-card {
     width: 100px;
     height: 140px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     padding: 6px;
@@ -16,11 +15,12 @@
 
 .game-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
 .game-card.can-buy {
-    border: 2px solid #27ae60; /* Green border for affordable */
+    border: 2px solid #27ae60;
+    /* Green border for affordable */
 }
 
 .game-card.disabled {
@@ -39,17 +39,36 @@
     font-size: 1.2rem;
     font-weight: 800;
     color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.level-1 .card-points { color: #333; text-shadow: none; }
-.level-2 .card-points { color: #333; text-shadow: none; }
-.level-3 .card-points { color: #333; text-shadow: none; }
+.level-1 .card-points {
+    color: #333;
+    text-shadow: none;
+}
+
+.level-2 .card-points {
+    color: #333;
+    text-shadow: none;
+}
+
+.level-3 .card-points {
+    color: #333;
+    text-shadow: none;
+}
 
 /* Level backgrounds (colored headers usually in real game, just doing subtle border/bg here) */
-.level-1 { border-bottom: 4px solid #2ecc71; }
-.level-2 { border-bottom: 4px solid #f1c40f; }
-.level-3 { border-bottom: 4px solid #3498db; }
+.level-1 {
+    border-bottom: 4px solid #2ecc71;
+}
+
+.level-2 {
+    border-bottom: 4px solid #f1c40f;
+}
+
+.level-3 {
+    border-bottom: 4px solid #3498db;
+}
 
 .card-content {
     flex: 1;
@@ -68,30 +87,97 @@
 
 .card-cost {
     display: flex;
-    flex-wrap: wrap; /* Should be column usually but let's try row */
+    flex-wrap: wrap;
+    /* Should be column usually but let's try row */
     gap: 4px;
     align-items: flex-end;
 }
 
-.cost-item {
-    
-}
+.cost-item {}
 
 .cost-bubble {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-weight: bold;
     font-size: 0.7rem;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
-.cost-bubble[style*="fcfcfc"] { /* White */
+.cost-bubble[style*="fcfcfc"] {
+    /* White */
     color: #333;
     text-shadow: none;
+}
+
+/* Action Overlay */
+.card-actions-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
+    z-index: 10;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.game-card:hover .card-actions-overlay {
+    display: flex;
+}
+
+.card-action-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: transform 0.1s, opacity 0.2s;
+    width: 85%;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-action-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.95;
+}
+
+.card-action-btn:active {
+    transform: scale(0.95);
+}
+
+.buy-btn {
+    background: #27ae60;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.reserve-btn {
+    background: #f1c40f;
+    color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
